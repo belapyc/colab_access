@@ -63,6 +63,9 @@ def set_logger(level):
     logger.addHandler(ch)
     logger.info("Logger is set.")
 
+# https://docs.python.org/3/howto/logging-cookbook.html
+# Using logging in multiple modules (for further reference)
+
 
 if __name__ == "__main__":
     args = parse_args()

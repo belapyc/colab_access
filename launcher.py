@@ -24,9 +24,11 @@ SHOW_PROGRESS = 0
 # Zipping all parameters to one list for easier passing
 PARAMETERS = [SPLIT_PERIOD, HIDDEN_LSTM_UNITS, TEST_TRAIN_SPLIT_COEFFICENT, CURRENT_YEAR, EPOCHS, BATCH_SIZE, INPUT_SHAPE, SHOW_PROGRESS]
 
-import argparse, logging, sys#, _helper_env
+import argparse, logging, sys, _helper_env
+import logging.handlers
 import pandas as pd
 from deepstock import *
+import os
 
 '''
 
@@ -61,15 +63,21 @@ def set_logger(level):
     logger.setLevel(logging.DEBUG)
     formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
 
+
+
     # Creating console handler for the logger
     ch = logging.StreamHandler()
     ch.setFormatter(formatter)
     ch.setLevel(level)
 
     logPath = "logs"
-    fileName = "logLauncher"
+    fileName = "logLauncher.log"
+    should_roll_over = os.path.isfile(logPath+"/"+fileName)
+
     # Creating file handler for logger
-    fh = logging.FileHandler("{0}/{1}.log".format(logPath, fileName))
+    fh = logging.handlers.RotatingFileHandler(logPath+"/"+fileName, mode='w', backupCount=5)
+    if should_roll_over:  # log already exists, roll over!
+        fh.doRollover()
     fh.setFormatter(formatter)
     fh.setLevel(logging.DEBUG)
 

@@ -9,3 +9,7 @@ Thumbs.db
 *.log.*
 
 env/
+
+__pycache__/
+*.py[cod]
+*$py.class

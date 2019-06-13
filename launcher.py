@@ -24,11 +24,12 @@ SHOW_PROGRESS = 0
 # Zipping all parameters to one list for easier passing
 PARAMETERS = [SPLIT_PERIOD, HIDDEN_LSTM_UNITS, TEST_TRAIN_SPLIT_COEFFICENT, CURRENT_YEAR, EPOCHS, BATCH_SIZE, INPUT_SHAPE, SHOW_PROGRESS]
 
-import argparse, logging, sys, _helper_env
+import argparse, logging, sys#, _helper_env
+import pandas as pd
+from deepstock import *
 
 '''
-Logging levels:
-10 - debug, 20 - info, 30 - warning, 40 - error, 50 - critical
+
 '''
 
 def parse_args():
@@ -43,6 +44,19 @@ def parse_args():
     return args
 
 def set_logger(level):
+    '''
+    Setting the levels for logger output.
+    Creates File and Stream handlers for outputting messages to a file and
+    console respectively.
+    File output level is set to DEBUG, ie all of the messages will be output
+    to the file regardless of the level
+    Console output level can be set by user through passing --verbose
+    argument in command line. The default level for console output is WARNING
+    Logging levels:
+    10 - debug, 20 - info, 30 - warning, 40 - error, 50 - critical
+
+    :level: integer, representing level of output to console
+    '''
 
     logger.setLevel(logging.DEBUG)
     formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
@@ -78,3 +92,22 @@ if __name__ == "__main__":
     logger.info("Setting random seeds...")
     _helper_env.setup_seed()
     logger.info("Random seeds set.")
+
+    # df = pd.read_csv(FILE_ADDRESS)
+    # df = df.loc[:, '<OPEN>':]
+    # print(df.columns)
+    # deleted_correlated_features(df)
+    # print(df.columns)
+    # df = normalize(df)
+    #
+    # '''
+    # Stacked Autoencoders
+    # '''
+    # print("Training SAE...")
+    # encoders, decoders = SAE_train(df, HIDDEN_LAYERS_AUTOENCODER, EPOCHS, BATCH_SIZE_AUTOENCODER, DEPTH_SAE, SHOW_PROGRESS)
+    # print("SAE finished training.")
+    # print("Predicting features...")
+    # features = SAE_predict(encoders, decoders, df)
+    # print("Features predicted")
+    # features = pd.DataFrame(features)
+    # print(features.head(5))

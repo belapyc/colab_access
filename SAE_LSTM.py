@@ -28,32 +28,13 @@ PARAMETERS = [SPLIT_PERIOD, HIDDEN_LSTM_UNITS, TEST_TRAIN_SPLIT_COEFFICENT, CURR
 import pandas as pd
 import time
 from deepstock import *
+import _helper_env
 from sklearn.ensemble import RandomForestClassifier, RandomTreesEmbedding
 import numpy as np
 import tensorflow as ts
-seed_value= 0
 
-# 1. Set the `PYTHONHASHSEED` environment variable at a fixed value
-import os
-os.environ['PYTHONHASHSEED']=str(seed_value)
 
-# 2. Set the `python` built-in pseudo-random generator at a fixed value
-import random
-random.seed(seed_value)
-
-# 3. Set the `numpy` pseudo-random generator at a fixed value
-import numpy as np
-np.random.seed(seed_value)
-
-# 4. Set the `tensorflow` pseudo-random generator at a fixed value
-import tensorflow as tf
-tf.set_random_seed(seed_value)
-
-# 5. Configure a new global `tensorflow` session
-from keras import backend as K
-session_conf = tf.ConfigProto(intra_op_parallelism_threads=1, inter_op_parallelism_threads=1)
-sess = tf.Session(graph=tf.get_default_graph(), config=session_conf)
-K.set_session(sess)
+_helper_env.setup_seed()
 
 
 start = time.time()

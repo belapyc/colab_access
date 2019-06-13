@@ -24,7 +24,7 @@ SHOW_PROGRESS = 0
 # Zipping all parameters to one list for easier passing
 PARAMETERS = [SPLIT_PERIOD, HIDDEN_LSTM_UNITS, TEST_TRAIN_SPLIT_COEFFICENT, CURRENT_YEAR, EPOCHS, BATCH_SIZE, INPUT_SHAPE, SHOW_PROGRESS]
 
-import argparse, logging, sys
+import argparse, logging, sys, _helper_env
 
 '''
 Logging levels:
@@ -72,5 +72,9 @@ if __name__ == "__main__":
     # Creating logger object for this module
     logger = logging.getLogger('MainLogger')
     set_logger(args.verbose)
+    logger.info("______________________________________________")
     logger.info("Logger level set.")
     logger.info("Arguments parsed.")
+    logger.info("Setting random seeds...")
+    _helper_env.setup_seed()
+    logger.info("Random seeds set.")

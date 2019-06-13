@@ -5,12 +5,14 @@ import os,random
 import numpy as np
 import tensorflow as tf
 from keras import backend as K
+import logging
 
+logger = logging.getLogger("MainLogger.helper")
 def setup_seed(seed_value= 0):
     # 1. Set the `PYTHONHASHSEED` environment variable at a fixed value
 
     os.environ['PYTHONHASHSEED']=str(seed_value)
-
+    logger.info("Set the `PYTHONHASHSEED` environment variable at a fixed value")
     # 2. Set the `python` built-in pseudo-random generator at a fixed value
 
     random.seed(seed_value)

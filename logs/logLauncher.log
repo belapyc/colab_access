@@ -10,3 +10,21 @@
 2019-06-13 22:06:35,561 - MainLogger - INFO - Logger is set.
 2019-06-13 22:06:35,561 - MainLogger - INFO - Logger level set.
 2019-06-13 22:06:35,561 - MainLogger - INFO - Arguments parsed.
+2019-06-13 22:12:28,862 - MainLogger - INFO - Logger is set.
+2019-06-13 22:12:28,862 - MainLogger - INFO - Logger level set.
+2019-06-13 22:12:28,863 - MainLogger - INFO - Arguments parsed.
+2019-06-13 22:12:28,863 - MainLogger - INFO - Setting random seeds...
+2019-06-13 22:12:28,863 - MainLogger - INFO - Set the `PYTHONHASHSEED` environment variable at a fixed value
+2019-06-13 22:12:28,887 - MainLogger - INFO - Random seeds set.
+2019-06-13 22:14:18,793 - MainLogger - INFO - Logger is set.
+2019-06-13 22:14:18,794 - MainLogger - INFO - Logger level set.
+2019-06-13 22:14:18,794 - MainLogger - INFO - Arguments parsed.
+2019-06-13 22:14:18,794 - MainLogger - INFO - Setting random seeds...
+2019-06-13 22:14:18,794 - MainLogger._helper_env - INFO - Set the `PYTHONHASHSEED` environment variable at a fixed value
+2019-06-13 22:14:18,819 - MainLogger - INFO - Random seeds set.
+2019-06-13 22:14:53,819 - MainLogger - INFO - Logger is set.
+2019-06-13 22:14:53,819 - MainLogger - INFO - Logger level set.
+2019-06-13 22:14:53,819 - MainLogger - INFO - Arguments parsed.
+2019-06-13 22:14:53,819 - MainLogger - INFO - Setting random seeds...
+2019-06-13 22:14:53,819 - MainLogger.helper - INFO - Set the `PYTHONHASHSEED` environment variable at a fixed value
+2019-06-13 22:14:53,844 - MainLogger - INFO - Random seeds set.

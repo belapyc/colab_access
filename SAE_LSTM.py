@@ -28,10 +28,18 @@ PARAMETERS = [SPLIT_PERIOD, HIDDEN_LSTM_UNITS, TEST_TRAIN_SPLIT_COEFFICENT, CURR
 import pandas as pd
 import time
 from deepstock import *
+import _helper_env
 from sklearn.ensemble import RandomForestClassifier, RandomTreesEmbedding
+import numpy as np
+import tensorflow as ts
+
+
+_helper_env.setup_seed()
 
 
 start = time.time()
+
+
 
 df = pd.read_csv(FILE_ADDRESS)
 df = df.loc[:, '<OPEN>':]

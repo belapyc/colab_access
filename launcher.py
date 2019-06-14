@@ -24,10 +24,8 @@ SHOW_PROGRESS = 0
 # Zipping all parameters to one list for easier passing
 PARAMETERS = [SPLIT_PERIOD, HIDDEN_LSTM_UNITS, TEST_TRAIN_SPLIT_COEFFICENT, CURRENT_YEAR, EPOCHS, BATCH_SIZE, INPUT_SHAPE, SHOW_PROGRESS]
 
-import argparse, logging, sys, _helper_env
+import argparse, logging, sys, _helper_env, data_prep
 import logging.handlers
-import pandas as pd
-from deepstock import *
 import os
 
 '''
@@ -45,55 +43,12 @@ def parse_args():
     args = parser.parse_args()
     return args
 
-def set_logger(level):
-    '''
-    Setting the levels for logger output.
-    Creates File and Stream handlers for outputting messages to a file and
-    console respectively.
-    File output level is set to DEBUG, ie all of the messages will be output
-    to the file regardless of the level
-    Console output level can be set by user through passing --verbose
-    argument in command line. The default level for console output is WARNING
-    Logging levels:
-    10 - debug, 20 - info, 30 - warning, 40 - error, 50 - critical
-
-    :level: integer, representing level of output to console
-    '''
-
-    logger.setLevel(logging.DEBUG)
-    formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
-
-
-
-    # Creating console handler for the logger
-    ch = logging.StreamHandler()
-    ch.setFormatter(formatter)
-    ch.setLevel(level)
-
-    logPath = "logs"
-    fileName = "logLauncher.log"
-    should_roll_over = os.path.isfile(logPath+"/"+fileName)
-
-    # Creating file handler for logger
-    fh = logging.handlers.RotatingFileHandler(logPath+"/"+fileName, mode='w', backupCount=5)
-    if should_roll_over:  # log already exists, roll over!
-        fh.doRollover()
-    fh.setFormatter(formatter)
-    fh.setLevel(logging.DEBUG)
-
-    logger.addHandler(fh)
-    logger.addHandler(ch)
-    logger.info("Logger is set.")
-
-# https://docs.python.org/3/howto/logging-cookbook.html
-# Using logging in multiple modules (for further reference)
-
 
 if __name__ == "__main__":
     args = parse_args()
     # Creating logger object for this module
     logger = logging.getLogger('MainLogger')
-    set_logger(args.verbose)
+    _helper_env.set_logger(args.verbose, logger)
     logger.info("______________________________________________")
     logger.info("Logger level set.")
     logger.info("Arguments parsed.")
@@ -101,9 +56,9 @@ if __name__ == "__main__":
     _helper_env.setup_seed()
     logger.info("Random seeds set.")
 
-    # df = pd.read_csv(FILE_ADDRESS)
+    df = data_prep.read_file(FILE_ADDRESS)
     # df = df.loc[:, '<OPEN>':]
-    # print(df.columns)
+    print(df.columns)
     # deleted_correlated_features(df)
     # print(df.columns)
     # df = normalize(df)

@@ -9,6 +9,7 @@ Thumbs.db
 *.log.*
 
 env/
+scikit-learn/
 
 __pycache__/
 *.py[cod]

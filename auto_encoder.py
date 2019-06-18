@@ -1,6 +1,8 @@
 import keras
 from keras.layers import Input, Dense, Dropout
 from keras.layers.core import Dense
+from keras.layers.recurrent import LSTM
+from keras.models import Model, Sequential
 
 def AE_train(dataframe, hidden_layer_size, epochs_amount, batch_amount, show_progress):
     """

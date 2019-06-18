@@ -27,6 +27,7 @@ PARAMETERS = [SPLIT_PERIOD, HIDDEN_LSTM_UNITS, TEST_TRAIN_SPLIT_COEFFICENT, CURR
 import argparse, logging, sys, _helper_env, data_prep
 import logging.handlers
 import os
+import for_finance
 
 '''
 

@@ -1,5 +1,5 @@
 # Location of the file, for which SAE should be performed
-FILE_ADDRESS = "Data/TA/BAC_15-mins_9years_TA.csv"
+FILE_ADDRESS = "../Data/TA/BAC_15-mins_9years_TA.csv"
 # Period length for splitting the original dataset
 SPLIT_PERIOD = 1000
 # Hidden layers in LSTM (dimensionality of state vector)

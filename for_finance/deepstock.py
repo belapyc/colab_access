@@ -266,7 +266,7 @@ def perform_LSTM(x_train, y_train, x_test, y_test, scaler_x, scaler_y, parameter
     # plt.plot(prediction, label="predictions")
     # # y_test = scaler_y.inverse_transform (np. array (y_test). reshape ((len( y_test), 1)))
     # plt.plot( [row[0] for row in y_test], label="actual")
-    # plt.show() 
+    # plt.show()
     return profit, mape
 
 
@@ -316,6 +316,7 @@ def train_test_splitting(df, parameters):
     y = (df.loc[:, '<NEXT>':]).as_matrix()
 
     train_end = int(parameters[0] * parameters[2])
+    print(train_end)
     x_train = x [0: train_end,]
     x_test = x[ train_end +1:len(x),]
     y_train = y [0: train_end]

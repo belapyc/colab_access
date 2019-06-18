@@ -27,7 +27,10 @@ PARAMETERS = [SPLIT_PERIOD, HIDDEN_LSTM_UNITS, TEST_TRAIN_SPLIT_COEFFICENT, CURR
 import argparse, logging, sys, _helper_env, data_prep
 import logging.handlers
 import os
+import pandas as pd
 import for_finance
+from data_prep import DataPrep
+from auto_encoder import SAE_train,SAE_predict
 
 '''
 
@@ -56,22 +59,17 @@ if __name__ == "__main__":
     logger.info("Setting random seeds...")
     _helper_env.setup_seed()
     logger.info("Random seeds set.")
+    data_preparer = DataPrep(logger)
+    data_preparer.read_file(FILE_ADDRESS)
+    data_preparer.initial_prep()
 
-    df = data_prep.read_file(FILE_ADDRESS)
-    # df = df.loc[:, '<OPEN>':]
-    print(df.columns)
-    # deleted_correlated_features(df)
-    # print(df.columns)
-    # df = normalize(df)
-    #
-    # '''
-    # Stacked Autoencoders
-    # '''
-    # print("Training SAE...")
-    # encoders, decoders = SAE_train(df, HIDDEN_LAYERS_AUTOENCODER, EPOCHS, BATCH_SIZE_AUTOENCODER, DEPTH_SAE, SHOW_PROGRESS)
-    # print("SAE finished training.")
-    # print("Predicting features...")
-    # features = SAE_predict(encoders, decoders, df)
-    # print("Features predicted")
-    # features = pd.DataFrame(features)
-    # print(features.head(5))
+    encoders, decoders = SAE_train(data_preparer.data, HIDDEN_LAYERS_AUTOENCODER, EPOCHS, BATCH_SIZE_AUTOENCODER, DEPTH_SAE, SHOW_PROGRESS)
+    features = SAE_predict(encoders, decoders, data_preparer.data)
+    print("Features predicted")
+    features = pd.DataFrame(features)
+    features = features.loc[:, (features != 0).any(axis=0)]
+    INPUT_SHAPE += features.shape[1]
+    print('New input shape: ', INPUT_SHAPE)
+    PARAMETERS = [SPLIT_PERIOD, HIDDEN_LSTM_UNITS, TEST_TRAIN_SPLIT_COEFFICENT, CURRENT_YEAR, EPOCHS, BATCH_SIZE, INPUT_SHAPE, SHOW_PROGRESS]
+
+    

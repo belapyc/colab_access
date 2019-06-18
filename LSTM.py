@@ -4,6 +4,8 @@ from keras.layers.core import Dense
 from keras.layers.recurrent import LSTM
 from keras.models import Model, Sequential
 from sklearn.metrics import mean_squared_error
+import numpy as np
+from metrics import *
 
 def create_LSTM():
     """

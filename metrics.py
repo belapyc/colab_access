@@ -1,3 +1,5 @@
+import numpy as np
+
 def rmse(input_layer, reconstruction_layer):
     """
     Function returning a root mean square error of two input vectors.

@@ -1,5 +1,10 @@
 import pandas as pd
 from for_finance import deepstock
+from sklearn.metrics import mean_squared_error
+from scipy import stats
+from sklearn import preprocessing
+from math import sqrt
+import numpy as np
 
 class DataPrep:
 
@@ -8,6 +13,7 @@ class DataPrep:
 
     def read_file(self, path):
         self.data = pd.read_csv(path)
+        self.initial_data = pd.read_csv(path)
         #return pd.read_csv(path)
 
     def initial_prep(self):
@@ -35,7 +41,7 @@ class DataPrep:
         del self.data['<MA5>']
         del self.data['<MA10>']
 
-    def data_preparing(self):
+    def data_preparing(self, features):
         """
         Given a data for several dates removing unneeded features, and prepare for yearly splitting.
         Adding additional feature: NEXT, which is essentially close price of the next time slot.
@@ -49,6 +55,7 @@ class DataPrep:
 
         Author: Nikita Vasilenko
         """
+        self.data = pd.concat([features, self.initial_data], axis=1)
         years = []
         for index, row in self.data.iterrows():
             years.append(int(str(row['<DATE>'])[:4]))
@@ -68,7 +75,12 @@ class DataPrep:
     #     Removing last row!
         self.data = self.data.dropna()
 
-    def train_test_splitting(self, parameters):
+    def choose_year(self, year):
+        self.data = self.data.loc[self.data['<YEAR>'] == year]
+        # df = df[:1000]
+        del self.data['<YEAR>']
+
+    def train_test_splitting( df, parameters):
         """
         Split dataframe to four subsets.
 
@@ -80,8 +92,8 @@ class DataPrep:
 
         Author: Nikita Vasilenko
         """
-        x = (self.data.loc[:, : '<RSI>']).as_matrix()
-        y = (self.data.loc[:, '<NEXT>':]).as_matrix()
+        x = (df.loc[:, : '<RSI>']).as_matrix()
+        y = (df.loc[:, '<NEXT>':]).as_matrix()
 
         train_end = int(parameters[0] * parameters[2])
         x_train = x [0: train_end,]
@@ -91,7 +103,7 @@ class DataPrep:
         return x_train, y_train, x_test, y_test
 
 
-    def scale_all_separetly(x_train, y_train, x_test, y_test, parameters):
+    def scale_all_separetly( x_train, y_train, x_test, y_test, parameters):
         """
         Scaling sepretly train and test datasets (to avoid data leakage).
 

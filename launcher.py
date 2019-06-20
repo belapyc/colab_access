@@ -48,41 +48,6 @@ def parse_args():
     args = parser.parse_args()
     return args
 
-def run_algorithm(df):
-    '''
-    Perform LSTM predicting with a sliding window approach
-    '''
-    periods = len(df)
-    profits = []
-    mapes = []
-    sliding_interval = SPLIT_PERIOD - int(SPLIT_PERIOD*TEST_TRAIN_SPLIT_COEFFICENT)
-    # model = create_LSTM();
-    for i in range(0, periods, sliding_interval):
-        profit = 0.0
-        mape = 0.0
-        start_period = i
-        if i + SPLIT_PERIOD > periods:
-            break
-        else:
-            end_period = i + SPLIT_PERIOD
-
-    #     MAIN ACTION
-
-        print('Current period: ', start_period, ' to ', end_period)
-        current_df = df[start_period:end_period]
-    #     Deviding
-        x_train, y_train, x_test, y_test = DataPrep.train_test_splitting(current_df, PARAMETERS)
-        x_train, y_train, x_test, y_test, scaler_x, scaler_y = DataPrep.scale_all_separetly(x_train, y_train, x_test, y_test, PARAMETERS)
-    #     Scaling
-    #     Performing LSTM
-        profit, mape = LSTM.perform_LSTM(x_train, y_train, x_test, y_test, scaler_x, scaler_y, PARAMETERS)
-
-        profits.append(profit)
-        mapes.append(mape)
-    #     END ACTION
-    print("Overall yearly profitability for ", CURRENT_YEAR, " year: ")
-    print(sum(profits))
-
 
 if __name__ == "__main__":
     args = parse_args()
@@ -109,7 +74,7 @@ if __name__ == "__main__":
     PARAMETERS = [SPLIT_PERIOD, HIDDEN_LSTM_UNITS, TEST_TRAIN_SPLIT_COEFFICENT, CURRENT_YEAR, EPOCHS, BATCH_SIZE, INPUT_SHAPE, SHOW_PROGRESS]
 
     data_preparer.data_preparing(features)
-    
+
     data_preparer.choose_year(CURRENT_YEAR)
 
-    run_algorithm(data_preparer.data)
+    LSTM.run_algorithm(data_preparer, CURRENT_YEAR, SPLIT_PERIOD, TEST_TRAIN_SPLIT_COEFFICENT, PARAMETERS)

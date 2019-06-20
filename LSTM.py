@@ -6,6 +6,7 @@ from keras.models import Model, Sequential
 from sklearn.metrics import mean_squared_error
 import numpy as np
 from metrics import *
+from data_prep import DataPrep
 
 def create_LSTM():
     """
@@ -63,3 +64,39 @@ def perform_LSTM(x_train, y_train, x_test, y_test, scaler_x, scaler_y, parameter
     # plt.plot( [row[0] for row in y_test], label="actual")
     # plt.show()
     return profit, mape
+
+def run_algorithm(data_preparer, year, SPLIT_PERIOD, TEST_TRAIN_SPLIT_COEFFICENT, PARAMETERS):
+    '''
+    Perform LSTM predicting with a sliding window approach
+    '''
+    df = data_preparer.choose_year(year)
+    periods = len(df)
+    profits = []
+    mapes = []
+    sliding_interval = SPLIT_PERIOD - int(SPLIT_PERIOD*TEST_TRAIN_SPLIT_COEFFICENT)
+    # model = create_LSTM();
+    for i in range(0, periods, sliding_interval):
+        profit = 0.0
+        mape = 0.0
+        start_period = i
+        if i + SPLIT_PERIOD > periods:
+            break
+        else:
+            end_period = i + SPLIT_PERIOD
+
+    #     MAIN ACTION
+
+        print('Current period: ', start_period, ' to ', end_period)
+        current_df = df[start_period:end_period]
+    #     Deviding
+        x_train, y_train, x_test, y_test = DataPrep.train_test_splitting(current_df, PARAMETERS)
+        x_train, y_train, x_test, y_test, scaler_x, scaler_y = DataPrep.scale_all_separetly(x_train, y_train, x_test, y_test, PARAMETERS)
+    #     Scaling
+    #     Performing LSTM
+        profit, mape = perform_LSTM(x_train, y_train, x_test, y_test, scaler_x, scaler_y, PARAMETERS)
+
+        profits.append(profit)
+        mapes.append(mape)
+    #     END ACTION
+    print("Overall yearly profitability for ", CURRENT_YEAR, " year: ")
+    print(sum(profits))

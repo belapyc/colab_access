@@ -76,9 +76,9 @@ class DataPrep:
         self.data = self.data.dropna()
 
     def choose_year(self, year):
-        self.data = self.data.loc[self.data['<YEAR>'] == year]
-        # df = df[:1000]
-        del self.data['<YEAR>']
+        df = self.data.loc[self.data['<YEAR>'] == year]
+        del df['<YEAR>']
+        return df
 
     def train_test_splitting( df, parameters):
         """

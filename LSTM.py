@@ -55,8 +55,8 @@ def perform_LSTM(x_train, y_train, x_test, y_test, scaler_x, scaler_y, parameter
 
     profit = profitability_test(prediction, y_test)
     mape = mean_absolute_percentage_error(prediction, y_test)
-    print('\t\tProfitability: {:0.2f} %'.format(profit))
-    print('\t\tMAPE: {:0.2f} %'.format(mape))
+    #print('\t\tProfitability: {:0.2f} %'.format(profit))
+    #print('\t\tMAPE: {:0.2f} %'.format(mape))
 
     # # Plot
     # plt.plot(prediction, label="predictions")
@@ -69,8 +69,10 @@ def run_algorithm(data_preparer, year, SPLIT_PERIOD, TEST_TRAIN_SPLIT_COEFFICENT
     '''
     Perform LSTM predicting with a sliding window approach
     '''
+    print(len(data_preparer.data))
     df = data_preparer.choose_year(year)
     periods = len(df)
+    print(periods)
     profits = []
     mapes = []
     sliding_interval = SPLIT_PERIOD - int(SPLIT_PERIOD*TEST_TRAIN_SPLIT_COEFFICENT)
@@ -86,10 +88,11 @@ def run_algorithm(data_preparer, year, SPLIT_PERIOD, TEST_TRAIN_SPLIT_COEFFICENT
 
     #     MAIN ACTION
 
-        print('Current period: ', start_period, ' to ', end_period)
+        #print('Current period: ', start_period, ' to ', end_period)
         current_df = df[start_period:end_period]
     #     Deviding
         x_train, y_train, x_test, y_test = DataPrep.train_test_splitting(current_df, PARAMETERS)
+        len("LENGTH OF TRAIN IN ALGORITH M ", x_train)
         x_train, y_train, x_test, y_test, scaler_x, scaler_y = DataPrep.scale_all_separetly(x_train, y_train, x_test, y_test, PARAMETERS)
     #     Scaling
     #     Performing LSTM

@@ -97,6 +97,7 @@ class DataPrep:
 
         train_end = int(parameters[0] * parameters[2])
         x_train = x [0: train_end,]
+        print("TRAINING END AT ", len(x_train))
         x_test = x[ train_end +1:len(x),]
         y_train = y [0: train_end]
         y_test = y[ train_end +1:len(y)]

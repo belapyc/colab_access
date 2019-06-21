@@ -98,5 +98,5 @@ def run_algorithm(data_preparer, year, SPLIT_PERIOD, TEST_TRAIN_SPLIT_COEFFICENT
         profits.append(profit)
         mapes.append(mape)
     #     END ACTION
-    print("Overall yearly profitability for ", CURRENT_YEAR, " year: ")
+    print("Overall yearly profitability for ", year, " year: ")
     print(sum(profits))

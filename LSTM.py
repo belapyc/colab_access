@@ -44,10 +44,10 @@ def perform_LSTM(x_train, y_train, x_test, y_test, scaler_x, scaler_y, parameter
     x_test = x_test.reshape (x_test. shape + (1,))
 
     model = Sequential ()
-    model.add (LSTM (parameters[1], activation = 'tanh', inner_activation = 'hard_sigmoid' , input_shape =(parameters[6], 1) ))
+    model.add (LSTM (parameters['HIDDEN_LSTM_UNITS'], activation = 'tanh', inner_activation = 'hard_sigmoid' , input_shape =(parameters['INPUT_SHAPE'], 1) ))
     model.add (Dense (output_dim = 1, activation = 'linear'))
     model.compile (loss ="mean_squared_error" , optimizer = "adam")
-    model.fit (x_train, y_train, batch_size = parameters[5], epochs = parameters[4], shuffle = False, verbose = parameters[7])
+    model.fit (x_train, y_train, batch_size = parameters['BATCH_SIZE'], epochs = parameters['EPOCHS'], shuffle = False, verbose = parameters['SHOW_PROGRESS'])
 
     prediction = model.predict (x_test)
     prediction = scaler_y.inverse_transform (np. array (prediction). reshape ((len( prediction), 1)))

@@ -96,7 +96,7 @@ class DataPrep:
         x = (df.loc[:, : '<RSI>']).as_matrix()
         y = (df.loc[:, '<NEXT>':]).as_matrix()
 
-        train_end = int(parameters[0] * parameters[2])
+        train_end = int(parameters['SPLIT_PERIOD'] * parameters['TEST_TRAIN_SPLIT_COEFFICENT'])
         x_train = x [0: train_end,]
         print("TRAINING END AT ", len(x_train))
         x_test = x[ train_end +1:len(x),]
@@ -121,16 +121,15 @@ class DataPrep:
         Author: Nikita Vasilenko
         """
 
-        print("Parameter 6: ", parameters[6])
         print("np array length : ", len(np.array(x_train)))
         print("lnegth x_train ", len(x_train))
 
         scaler_x = preprocessing.MinMaxScaler ( feature_range =( -1, 1))
 
-        x_train = np.array(x_train).reshape((len(x_train) , parameters[6]))
+        x_train = np.array(x_train).reshape((len(x_train) , parameters['INPUT_SHAPE']))
 
         x_train = scaler_x.fit_transform(x_train)
-        x_test = np. array (x_test).reshape ((len(x_test) , parameters[6]))
+        x_test = np. array (x_test).reshape ((len(x_test) , parameters['INPUT_SHAPE']))
         x_test = scaler_x.fit_transform(x_test)
 
         scaler_y = preprocessing. MinMaxScaler ( feature_range =( -1, 1))
@@ -155,7 +154,7 @@ class DataPrep:
 
         Author: Nikita Vasilenko
         """
-        train_end = int(parameters[0] * parameters[2])
+        train_end = int(parameters['SPLIT_PERIOD'] * parameters['TEST_TRAIN_SPLIT_COEFFICENT'])
 
         data_train = df[:train_end]
         data_test = df[train_end:]

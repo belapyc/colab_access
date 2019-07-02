@@ -65,7 +65,7 @@ def perform_LSTM(x_train, y_train, x_test, y_test, scaler_x, scaler_y, parameter
     # plt.show()
     return profit, mape
 
-def run_algorithm(data_preparer, year, SPLIT_PERIOD, TEST_TRAIN_SPLIT_COEFFICENT, PARAMETERS):
+def run_algorithm(data_preparer, year, SPLIT_PERIOD, TEST_TRAIN_SPLIT_COEFFICENT, PARAMETERS, apply_wavelet=False):
     '''
     Perform LSTM predicting with a sliding window approach
     '''
@@ -91,8 +91,14 @@ def run_algorithm(data_preparer, year, SPLIT_PERIOD, TEST_TRAIN_SPLIT_COEFFICENT
         #print('Current period: ', start_period, ' to ', end_period)
         current_df = df[start_period:end_period]
     #     Deviding
-        x_train, y_train, x_test, y_test = DataPrep.train_test_splitting(current_df, PARAMETERS)
-        len("LENGTH OF TRAIN IN ALGORITH M ", x_train)
+        if apply_wavelet:
+            x_train, y_train, x_test, y_test = DataPrep.train_test_splitting_wavelet(current_df, PARAMETERS)
+        else:
+            x_train, y_train, x_test, y_test = DataPrep.train_test_splitting(current_df, PARAMETERS)
+
+        print("LENGTH OF TRAIN IN ALGORITHM ", len(x_train))
+        print("Shape of x_train: ", x_train.shape)
+
         x_train, y_train, x_test, y_test, scaler_x, scaler_y = DataPrep.scale_all_separetly(x_train, y_train, x_test, y_test, PARAMETERS)
     #     Scaling
     #     Performing LSTM
@@ -103,3 +109,4 @@ def run_algorithm(data_preparer, year, SPLIT_PERIOD, TEST_TRAIN_SPLIT_COEFFICENT
     #     END ACTION
     print("Overall yearly profitability for ", year, " year: ")
     print(sum(profits))
+    return (sum(profits))

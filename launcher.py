@@ -12,6 +12,16 @@ from __init__ import PARAMETERS, FILE_ADDRESS
 '''
 
 '''
+# https://stackoverflow.com/questions/15008758/parsing-boolean-values-with-argparse
+def str2bool(v):
+    if isinstance(v, bool):
+       return v
+    if v.lower() in ('yes', 'true', 't', 'y', '1'):
+        return True
+    elif v.lower() in ('no', 'false', 'f', 'n', '0'):
+        return False
+    else:
+        raise argparse.ArgumentTypeError('Boolean value expected.')
 
 def parse_args():
     parser = argparse.ArgumentParser()
@@ -21,6 +31,12 @@ def parse_args():
                     help='For which year to perform predicting.')
     parser.add_argument("--verbose", dest="verbose", type=int, default=30,
                     help='Set a level of verbosity')
+    parser.add_argument("--wavelet", type=str2bool, nargs='?',
+                        const=True, default=False,
+                        help="Activate wavelet transform.")
+    parser.add_argument("--all_years", type=str2bool, nargs='?',
+                        const=True, default=False,
+                        help="Perform algo on all years.")
     args = parser.parse_args()
     return args
 
@@ -34,6 +50,8 @@ if __name__ == "__main__":
     logger.info("Logger level set.")
     logger.info("Arguments parsed.")
     logger.info("Setting random seeds...")
+    if(not args.all_years):
+        print("performing on all years")
     _helper_env.setup_seed()
     logger.info("Random seeds set.")
     data_preparer = DataPrep(logger)
@@ -45,11 +63,15 @@ if __name__ == "__main__":
     print("Features predicted")
     features = pd.DataFrame(features)
     features = features.loc[:, (features != 0).any(axis=0)]
-    # INPUT_SHAPE += features.shape[1]
-    # print('New input shape: ', INPUT_SHAPE)
 
+    # Updating Input Shape as we added features from SAE
+    PARAMETERS['INPUT_SHAPE'] += features.shape[1]
 
+    # Removing unneccessary features and adding NEXT and YEAR variables
     data_preparer.data_preparing(features)
 
-
-    LSTM.run_algorithm(data_preparer, PARAMETERS['CURRENT_YEAR'], PARAMETERS['SPLIT_PERIOD'], PARAMETERS['TEST_TRAIN_SPLIT_COEFFICENT'], [PARAMETERS[key] for key in PARAMETERS])
+    profits_per_year = {}
+    for year in PARAMETERS['ALL_YEARS']:
+        profits = LSTM.run_algorithm(data_preparer, year, PARAMETERS['SPLIT_PERIOD'], PARAMETERS['TEST_TRAIN_SPLIT_COEFFICENT'], [PARAMETERS[key] for key in PARAMETERS], args.wavelet)
+        profits_per_year.update(year = profits)
+    print(profits_per_year)

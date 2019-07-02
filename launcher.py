@@ -37,6 +37,9 @@ def parse_args():
     parser.add_argument("--wavelet", type=str2bool, nargs='?',
                         const=True, default=False,
                         help="Activate wavelet transform.")
+    parser.add_argument("--forest", type=str2bool, nargs='?',
+                        const=True, default=False,
+                        help="Activate encoding forest.")                    
     parser.add_argument("--all_years", type=str2bool, nargs='?',
                         const=True, default=False,
                         help="Perform algo on all years.")
@@ -92,7 +95,7 @@ if __name__ == "__main__":
     profits_per_year = {}
     for year in PARAMETERS['ALL_YEARS']:
         profits = LSTM.run_algorithm(data_preparer, year, PARAMETERS['SPLIT_PERIOD'], PARAMETERS['TEST_TRAIN_SPLIT_COEFFICENT'], PARAMETERS, args.wavelet)
-        profits_per_year[year] = profits 
+        profits_per_year[year] = profits
     print(profits_per_year)
     total_profits = 0
     for key,value in profits_per_year:

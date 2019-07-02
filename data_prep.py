@@ -80,6 +80,7 @@ class DataPrep:
         del df['<YEAR>']
         return df
 
+    @staticmethod
     def train_test_splitting( df, parameters):
         """
         Split dataframe to four subsets.
@@ -103,7 +104,7 @@ class DataPrep:
         y_test = y[ train_end +1:len(y)]
         return x_train, y_train, x_test, y_test
 
-
+    @staticmethod
     def scale_all_separetly( x_train, y_train, x_test, y_test, parameters):
         """
         Scaling sepretly train and test datasets (to avoid data leakage).
@@ -119,8 +120,15 @@ class DataPrep:
 
         Author: Nikita Vasilenko
         """
+
+        print("Parameter 6: ", parameters[6])
+        print("np array length : ", len(np.array(x_train)))
+        print("lnegth x_train ", len(x_train))
+
         scaler_x = preprocessing.MinMaxScaler ( feature_range =( -1, 1))
-        x_train = np. array (x_train).reshape ((len(x_train) , parameters[6]))
+
+        x_train = np.array(x_train).reshape((len(x_train) , parameters[6]))
+
         x_train = scaler_x.fit_transform(x_train)
         x_test = np. array (x_test).reshape ((len(x_test) , parameters[6]))
         x_test = scaler_x.fit_transform(x_test)
@@ -133,7 +141,8 @@ class DataPrep:
 
         return x_train, y_train, x_test, y_test, scaler_x, scaler_y
 
-    def train_test_splitting_wavelet(self, parameters):
+    @staticmethod
+    def train_test_splitting_wavelet(df, parameters):
         """
         Split the dataframe to train and test subsets, and apply wavelet to TRAIN feature set.
         No data shuffeling. Returns four subsets.
@@ -148,17 +157,17 @@ class DataPrep:
         """
         train_end = int(parameters[0] * parameters[2])
 
-        self.data_train = self.data[:train_end]
-        self.data_test = self.data[train_end:]
+        data_train = df[:train_end]
+        data_test = df[train_end:]
 
-        self.data_train = apply_wavelet(self.data_train, 1)
+        data_train = DataPrep.apply_wavelet(data_train, 1)
 
-        x_train = (self.data_train.loc[:, : '<RSI>']).as_matrix()
-        y_train = (self.data_train.loc[:, '<NEXT>':]).as_matrix()
+        x_train = (data_train.loc[:, : '<RSI>']).as_matrix()
+        y_train = (data_train.loc[:, '<NEXT>':]).as_matrix()
 
 
-        x_test =  (self.data_test.loc[:, : '<RSI>']).as_matrix()
-        y_test =  (self.data_test.loc[:, '<NEXT>':]).as_matrix()
+        x_test =  (data_test.loc[:, : '<RSI>']).as_matrix()
+        y_test =  (data_test.loc[:, '<NEXT>':]).as_matrix()
 
         return x_train, y_train, x_test, y_test
 
@@ -184,7 +193,8 @@ class DataPrep:
             result[feature_name] = (self.data[feature_name] - min_value) / (max_value - min_value)
         self.data = result
 
-    def apply_wavelet(self, levels):
+    @staticmethod
+    def apply_wavelet(df, levels):
         """
         This functions performa a 1-layer wavelet transform for all rows and all columns of a given Pandas Dataframe
 
@@ -200,7 +210,7 @@ class DataPrep:
         Author: Nikita Vasilenko
         """
         waved_self.data = pd.DataFrame()
-        for items in self.data.items():
+        for items in df.items():
             current_name = items[0]
             current_series = items[1]
     #         N- layer Wavelet Transform with Haar Function

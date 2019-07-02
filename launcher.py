@@ -39,7 +39,7 @@ def parse_args():
                         help="Activate wavelet transform.")
     parser.add_argument("--forest", type=str2bool, nargs='?',
                         const=True, default=False,
-                        help="Activate encoding forest.")                    
+                        help="Activate encoding forest.")
     parser.add_argument("--all_years", type=str2bool, nargs='?',
                         const=True, default=False,
                         help="Perform algo on all years.")
@@ -64,7 +64,7 @@ if __name__ == "__main__":
     data_preparer.read_file(FILE_ADDRESS)
     data_preparer.initial_prep()
 
-    forest = True
+    forest = args.forest
     if forest:
         eforest = RandomTreesEmbedding(n_estimators=15, max_depth=None, n_jobs=-1, random_state=0)
         print("Training forests autoencoder...")

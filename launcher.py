@@ -8,6 +8,9 @@ from data_prep import DataPrep
 from auto_encoder import SAE_train,SAE_predict
 import LSTM
 from __init__ import PARAMETERS, FILE_ADDRESS
+from sklearn.ensemble import RandomForestClassifier, RandomTreesEmbedding
+
+
 
 '''
 
@@ -58,20 +61,40 @@ if __name__ == "__main__":
     data_preparer.read_file(FILE_ADDRESS)
     data_preparer.initial_prep()
 
-    encoders, decoders = SAE_train(data_preparer.data, PARAMETERS['HIDDEN_LAYERS_AUTOENCODER'], PARAMETERS['EPOCHS'], PARAMETERS['BATCH_SIZE_AUTOENCODER'], PARAMETERS['DEPTH_SAE'], PARAMETERS['SHOW_PROGRESS'])
-    features = SAE_predict(encoders, decoders, data_preparer.data)
-    print("Features predicted")
-    features = pd.DataFrame(features)
-    features = features.loc[:, (features != 0).any(axis=0)]
+    forest = True
+    if forest:
+        eforest = RandomTreesEmbedding(n_estimators=15, max_depth=None, n_jobs=-1, random_state=0)
+        print("Training forests autoencoder...")
+        eforest.fit(data_preparer.data)
+        print("Encoding data...")
+        encoding = eforest.encode(data_preparer.data)
+        features = encoding
+        features = pd.DataFrame(features)
+        features = features.loc[:, (features != 0).any(axis=0)]
+    else:
+        encoders, decoders = SAE_train(data_preparer.data, PARAMETERS['HIDDEN_LAYERS_AUTOENCODER'], PARAMETERS['EPOCHS'], PARAMETERS['BATCH_SIZE_AUTOENCODER'], PARAMETERS['DEPTH_SAE'], PARAMETERS['SHOW_PROGRESS'])
+        features = SAE_predict(encoders, decoders, data_preparer.data)
+        print("Features predicted")
+        features = pd.DataFrame(features)
+        features = features.loc[:, (features != 0).any(axis=0)]
 
     # Updating Input Shape as we added features from SAE
+    print(features.shape[1])
     PARAMETERS['INPUT_SHAPE'] += features.shape[1]
+    print(PARAMETERS['INPUT_SHAPE'])
+
+
+
 
     # Removing unneccessary features and adding NEXT and YEAR variables
     data_preparer.data_preparing(features)
 
     profits_per_year = {}
     for year in PARAMETERS['ALL_YEARS']:
-        profits = LSTM.run_algorithm(data_preparer, year, PARAMETERS['SPLIT_PERIOD'], PARAMETERS['TEST_TRAIN_SPLIT_COEFFICENT'], [PARAMETERS[key] for key in PARAMETERS], args.wavelet)
-        profits_per_year.update(year = profits)
+        profits = LSTM.run_algorithm(data_preparer, year, PARAMETERS['SPLIT_PERIOD'], PARAMETERS['TEST_TRAIN_SPLIT_COEFFICENT'], PARAMETERS, args.wavelet)
+        profits_per_year[year] = profits 
     print(profits_per_year)
+    total_profits = 0
+    for key,value in profits_per_year:
+        total_profits = total_profits + value
+    print(total_profits/len(PARAMETERS['ALL_YEARS']))

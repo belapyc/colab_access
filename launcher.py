@@ -2,6 +2,7 @@
 import argparse, logging, sys, _helper_env, data_prep
 import logging.handlers
 import os
+import time
 import pandas as pd
 import for_finance
 from data_prep import DataPrep
@@ -64,6 +65,7 @@ if __name__ == "__main__":
     data_preparer.read_file(FILE_ADDRESS)
     data_preparer.initial_prep()
 
+    start = time.time()
     forest = args.forest
     if forest:
         eforest = RandomTreesEmbedding(n_estimators=15, max_depth=None, n_jobs=-1, random_state=0)
@@ -96,8 +98,14 @@ if __name__ == "__main__":
     for year in PARAMETERS['ALL_YEARS']:
         profits = LSTM.run_algorithm(data_preparer, year, PARAMETERS['SPLIT_PERIOD'], PARAMETERS['TEST_TRAIN_SPLIT_COEFFICENT'], PARAMETERS, args.wavelet)
         profits_per_year[year] = profits
-    print(profits_per_year)
-    total_profits = 0
-    for key,value in profits_per_year:
-        total_profits = total_profits + value
-    print(total_profits/len(PARAMETERS['ALL_YEARS']))
+    end = time.time()
+    elapsed_time = end-start
+    f= open("results_forest_"+str(args.forest)+"wavelet_"+str(args.wavelet)+".txt","w+")
+
+    f.write("forest: "+ str(args.forest) + "\n")
+    f.write("wavelet: "+ str(args.wavelet) + "\n")
+    f.write("time: " + str(elapsed_time))
+
+    f.write(str(profits_per_year))
+
+    f.close()

@@ -67,14 +67,10 @@ if __name__ == "__main__":
     start = time.time()
     forest = args.forest
     if forest:
-        eforest = RandomTreesEmbedding(n_estimators=15, max_depth=None, n_jobs=-1, random_state=0)
-        print("Training forests autoencoder...")
-        eforest.fit(data_preparer.data)
-        print("Encoding data...")
-        encoding = eforest.encode(data_preparer.data)
-        features = encoding
-        features = pd.DataFrame(features)
-        features = features.loc[:, (features != 0).any(axis=0)]
+        rand = RandomTreesEmbedding(n_estimators=15, max_depth = None, random_state = 0)
+        rand.fit(data_preparer.data)
+        encoded = rand.apply(data_preparer.data)
+        features = encoded
     else:
         encoders, decoders = SAE_train(data_preparer.data, PARAMETERS['HIDDEN_LAYERS_AUTOENCODER'], PARAMETERS['EPOCHS'], PARAMETERS['BATCH_SIZE_AUTOENCODER'], PARAMETERS['DEPTH_SAE'], PARAMETERS['SHOW_PROGRESS'])
         features = SAE_predict(encoders, decoders, data_preparer.data)
@@ -105,8 +101,8 @@ if __name__ == "__main__":
 
     print("Writing to a file...")
     f.write("forest: "+ str(args.forest) + "\n")
-    f.write("Features predicted: "+ features.shape[1])
-    f.write("Predicted based on "+ PARAMETERS['INPUT_SHAPE'], " features")
+    f.write("Features predicted: "+ str(features.shape[1]))
+    f.write("Predicted based on "+ str(PARAMETERS['INPUT_SHAPE'])+ " features")
     f.write("wavelet: "+ str(args.wavelet) + "\n")
     f.write("time: " + str(elapsed_time))
     f.write(str(PARAMETERS))

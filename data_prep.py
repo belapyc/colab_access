@@ -93,8 +93,8 @@ class DataPrep:
 
         Author: Nikita Vasilenko
         """
-        x = (df.loc[:, : '<RSI>']).as_matrix()
-        y = (df.loc[:, '<NEXT>':]).as_matrix()
+        x = (df.loc[:, : '<RSI>']).values
+        y = (df.loc[:, '<NEXT>':]).values
 
         train_end = int(parameters['SPLIT_PERIOD'] * parameters['TEST_TRAIN_SPLIT_COEFFICENT'])
         x_train = x [0: train_end,]
@@ -120,9 +120,6 @@ class DataPrep:
 
         Author: Nikita Vasilenko
         """
-
-        print("np array length : ", len(np.array(x_train)))
-        print("lnegth x_train ", len(x_train))
 
         scaler_x = preprocessing.MinMaxScaler ( feature_range =( -1, 1))
 
@@ -154,19 +151,25 @@ class DataPrep:
 
         Author: Nikita Vasilenko
         """
+        x = (df.loc[:, : '<RSI>']).values
+        y = (df.loc[:, '<NEXT>':]).values
+
         train_end = int(parameters['SPLIT_PERIOD'] * parameters['TEST_TRAIN_SPLIT_COEFFICENT'])
 
-        data_train = df[:train_end]
+
+        data_train = df[0:train_end]
         data_test = df[train_end:]
+
 
         data_train = DataPrep.apply_wavelet(data_train, 1)
 
-        x_train = (data_train.loc[:, : '<RSI>']).as_matrix()
-        y_train = (data_train.loc[:, '<NEXT>':]).as_matrix()
+        x_train = (data_train.loc[:, : '<RSI>']).values
+        y_train = (data_train.loc[:, '<NEXT>':]).values
 
 
-        x_test =  (data_test.loc[:, : '<RSI>']).as_matrix()
-        y_test =  (data_test.loc[:, '<NEXT>':]).as_matrix()
+
+        x_test =  (data_test.loc[:, : '<RSI>']).values
+        y_test =  (data_test.loc[:, '<NEXT>':]).values
 
         return x_train, y_train, x_test, y_test
 

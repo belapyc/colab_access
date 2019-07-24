@@ -44,8 +44,8 @@ def perform_LSTM(x_train, y_train, x_test, y_test, scaler_x, scaler_y, parameter
     x_test = x_test.reshape (x_test. shape + (1,))
 
     model = Sequential ()
-    model.add (LSTM (parameters['HIDDEN_LSTM_UNITS'], activation = 'tanh', inner_activation = 'hard_sigmoid' , input_shape =(parameters['INPUT_SHAPE'], 1) ))
-    model.add (Dense (output_dim = 1, activation = 'linear'))
+    model.add (LSTM (parameters['HIDDEN_LSTM_UNITS'], activation = 'tanh', recurrent_activation="hard_sigmoid", input_shape =(parameters['INPUT_SHAPE'], 1) ))
+    model.add (Dense (units=1, activation = 'linear'))
     model.compile (loss ="mean_squared_error" , optimizer = "adam")
     model.fit (x_train, y_train, batch_size = parameters['BATCH_SIZE'], epochs = parameters['EPOCHS'], shuffle = False, verbose = parameters['SHOW_PROGRESS'])
 
@@ -88,7 +88,7 @@ def run_algorithm(data_preparer, year, SPLIT_PERIOD, TEST_TRAIN_SPLIT_COEFFICENT
 
     #     MAIN ACTION
 
-        #print('Current period: ', start_period, ' to ', end_period)
+        print('Current period: ', start_period, ' to ', end_period)
         current_df = df[start_period:end_period]
     #     Deviding
         if apply_wavelet:
@@ -96,7 +96,6 @@ def run_algorithm(data_preparer, year, SPLIT_PERIOD, TEST_TRAIN_SPLIT_COEFFICENT
         else:
             x_train, y_train, x_test, y_test = DataPrep.train_test_splitting(current_df, PARAMETERS)
 
-        print("LENGTH OF TRAIN IN ALGORITHM ", len(x_train))
         print("Shape of x_train: ", x_train.shape)
 
         x_train, y_train, x_test, y_test, scaler_x, scaler_y = DataPrep.scale_all_separetly(x_train, y_train, x_test, y_test, PARAMETERS)

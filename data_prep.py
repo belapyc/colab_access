@@ -1,10 +1,10 @@
 import pandas as pd
-from for_finance import deepstock
 from sklearn.metrics import mean_squared_error
 from scipy import stats
 from sklearn import preprocessing
 from math import sqrt
 import numpy as np
+from pywt import wavedec
 
 class DataPrep:
 
@@ -208,11 +208,11 @@ class DataPrep:
 
         Author: Nikita Vasilenko
         """
-        waved_self.data = pd.DataFrame()
+        waved_data = pd.DataFrame()
         for items in df.items():
             current_name = items[0]
             current_series = items[1]
     #         N- layer Wavelet Transform with Haar Function
-            cA = pywt.wavedec(current_series, 'haar', level=levels)
-            waved_self.data[current_name] = cA[0]
-        return waved_self.data
+            cA = wavedec(current_series, 'haar', level=levels)
+            waved_data[current_name] = cA[0]
+        return waved_data

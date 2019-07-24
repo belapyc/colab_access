@@ -105,8 +105,8 @@ if __name__ == "__main__":
 
     print("Writing to a file...")
     f.write("forest: "+ str(args.forest) + "\n")
-    f.write("Features predicted: ", features.shape[1])
-    f.write("Predicted based on ", PARAMETERS['INPUT_SHAPE'], " features")
+    f.write("Features predicted: "+ features.shape[1])
+    f.write("Predicted based on "+ PARAMETERS['INPUT_SHAPE'], " features")
     f.write("wavelet: "+ str(args.wavelet) + "\n")
     f.write("time: " + str(elapsed_time))
     f.write("Total profitability: ", str(total_profits))

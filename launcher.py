@@ -4,7 +4,6 @@ import logging.handlers
 import os
 import time
 import pandas as pd
-import for_finance
 from data_prep import DataPrep
 from auto_encoder import SAE_train,SAE_predict
 import LSTM
@@ -94,17 +93,23 @@ if __name__ == "__main__":
     # Removing unneccessary features and adding NEXT and YEAR variables
     data_preparer.data_preparing(features)
 
+    total_profits = 0.0
     profits_per_year = {}
     for year in PARAMETERS['ALL_YEARS']:
-        profits = LSTM.run_algorithm(data_preparer, year, PARAMETERS['SPLIT_PERIOD'], PARAMETERS['TEST_TRAIN_SPLIT_COEFFICENT'], PARAMETERS, args.wavelet)
-        profits_per_year[year] = profits
+        profit = LSTM.run_algorithm(data_preparer, year, PARAMETERS['SPLIT_PERIOD'], PARAMETERS['TEST_TRAIN_SPLIT_COEFFICENT'], PARAMETERS, args.wavelet)
+        total_profits = profit + total_profits
+        profits_per_year[year] = profit
     end = time.time()
     elapsed_time = end-start
     f= open("results_forest_"+str(args.forest)+"wavelet_"+str(args.wavelet)+".txt","w+")
 
+    print("Writing to a file...")
     f.write("forest: "+ str(args.forest) + "\n")
+    f.write("Features predicted: ", features.shape[1])
+    f.write("Predicted based on ", PARAMETERS['INPUT_SHAPE'], " features")
     f.write("wavelet: "+ str(args.wavelet) + "\n")
     f.write("time: " + str(elapsed_time))
+    f.write("Total profitability: ", str(total_profits))
 
     f.write(str(profits_per_year))
 

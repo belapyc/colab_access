@@ -70,7 +70,7 @@ if __name__ == "__main__":
         rand = RandomTreesEmbedding(n_estimators=15, max_depth = None, random_state = 0)
         rand.fit(data_preparer.data)
         encoded = rand.apply(data_preparer.data)
-        features = encoded
+        features = pd.DataFrame(encoded)
     else:
         encoders, decoders = SAE_train(data_preparer.data, PARAMETERS['HIDDEN_LAYERS_AUTOENCODER'], PARAMETERS['EPOCHS'], PARAMETERS['BATCH_SIZE_AUTOENCODER'], PARAMETERS['DEPTH_SAE'], PARAMETERS['SHOW_PROGRESS'])
         features = SAE_predict(encoders, decoders, data_preparer.data)
@@ -101,12 +101,12 @@ if __name__ == "__main__":
 
     print("Writing to a file...")
     f.write("forest: "+ str(args.forest) + "\n")
-    f.write("Features predicted: "+ str(features.shape[1]))
-    f.write("Predicted based on "+ str(PARAMETERS['INPUT_SHAPE'])+ " features")
+    f.write("Features predicted: "+ str(features.shape[1]) + "\n")
+    f.write("Predicted based on "+ str(PARAMETERS['INPUT_SHAPE'])+ " features" + "\n")
     f.write("wavelet: "+ str(args.wavelet) + "\n")
-    f.write("time: " + str(elapsed_time))
-    f.write(str(PARAMETERS))
-    f.write("Total profitability: ", str(total_profits))
+    f.write("time: " + str(elapsed_time) + "\n")
+    f.write(str(PARAMETERS) + "\n")
+    f.write("Total profitability: "+ str(total_profits)+"\n")
 
     f.write(str(profits_per_year))
 

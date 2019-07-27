@@ -43,6 +43,7 @@ def parse_args():
     parser.add_argument("--all_years", type=str2bool, nargs='?',
                         const=True, default=False,
                         help="Perform algo on all years.")
+    parser.add_argument("--forest_no", dest='forest_no', type=int, default=15)
     args = parser.parse_args()
     return args
 
@@ -66,8 +67,9 @@ if __name__ == "__main__":
 
     start = time.time()
     forest = args.forest
+    encoding_start = time.time()
     if forest:
-        rand = RandomTreesEmbedding(n_estimators=15, max_depth = None, random_state = 0)
+        rand = RandomTreesEmbedding(n_estimators=args.forest_no, max_depth = None, random_state = 0)
         rand.fit(data_preparer.data)
         encoded = rand.apply(data_preparer.data)
         features = pd.DataFrame(encoded)
@@ -77,6 +79,7 @@ if __name__ == "__main__":
         print("Features predicted")
         features = pd.DataFrame(features)
         features = features.loc[:, (features != 0).any(axis=0)]
+    encoding_time = time.time() - encoding_start
 
     # Updating Input Shape as we added features from SAE
     print(features.shape[1])
@@ -97,16 +100,19 @@ if __name__ == "__main__":
         profits_per_year[year] = profit
     end = time.time()
     elapsed_time = end-start
-    f= open("results_forest_"+str(args.forest)+"wavelet_"+str(args.wavelet)+".txt","w+")
+    f= open("results_forest_"+str(args.forest)+"wavelet_"+str(args.wavelet)+".txt","a")
 
     print("Writing to a file...")
+    f.write("\n============================================================\n")
     f.write("forest: "+ str(args.forest) + "\n")
     f.write("Features predicted: "+ str(features.shape[1]) + "\n")
     f.write("Predicted based on "+ str(PARAMETERS['INPUT_SHAPE'])+ " features" + "\n")
     f.write("wavelet: "+ str(args.wavelet) + "\n")
-    f.write("time: " + str(elapsed_time) + "\n")
+    f.write("total time: " + str(elapsed_time) + "\n")
+    f.write("encoding time: " + str(encoding_time) + "\n")
     f.write(str(PARAMETERS) + "\n")
     f.write("Total profitability: "+ str(total_profits)+"\n")
+    f.write("Average profitability: " + str(total_profits/len(PARAMETERS['ALL_YEARS']))+"\n")
 
     f.write(str(profits_per_year))
 

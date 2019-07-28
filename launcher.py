@@ -113,6 +113,7 @@ if __name__ == "__main__":
     f.write(str(PARAMETERS) + "\n")
     f.write("Total profitability: "+ str(total_profits)+"\n")
     f.write("Average profitability: " + str(total_profits/len(PARAMETERS['ALL_YEARS']))+"\n")
+    f.write("File path: " + str(args.data_path) + "\n")
 
     f.write(str(profits_per_year))
 

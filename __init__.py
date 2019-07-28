@@ -1,4 +1,4 @@
-FILE_ADDRESS = "Data/TA/BAC_15-mins_9years_TA.csv"
+FILE_ADDRESS = "Data/TA/APPLE_15mins_2009-2018_TA.csv"
 # Period length for splitting the original dataset
 SPLIT_PERIOD_DEFAULT = 1000
 # Hidden layers in LSTM (dimensionality of state vector)
@@ -18,7 +18,7 @@ BATCH_SIZE_DEFAULT  = None
 # Batch size for autoencoder
 BATCH_SIZE_AUTOENCODER_DEFAULT  = 256
 # Amount of input features
-INPUT_SHAPE_DEFAULT  = 15
+INPUT_SHAPE_DEFAULT  = 14
 # Please set 1 - to print all epochs, 0 - to ignore printing epochs
 SHOW_PROGRESS_DEFAULT  = 0
 # Zipping all parameters to one list for easier passing

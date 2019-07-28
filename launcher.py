@@ -8,7 +8,7 @@ from data_prep import DataPrep
 from auto_encoder import SAE_train,SAE_predict
 import LSTM
 from __init__ import PARAMETERS, FILE_ADDRESS
-from sklearn.ensemble import RandomForestClassifier, RandomTreesEmbedding
+from sklearn.ensemble import RandomTreesEmbedding
 
 
 
@@ -43,7 +43,7 @@ def parse_args():
     parser.add_argument("--all_years", type=str2bool, nargs='?',
                         const=True, default=False,
                         help="Perform algo on all years.")
-    parser.add_argument("--forest_no", dest='forest_no', type=int, default=15)
+    parser.add_argument("--forest_no", dest='forest_no', type=int, default=50)
     args = parser.parse_args()
     return args
 
@@ -62,7 +62,7 @@ if __name__ == "__main__":
     _helper_env.setup_seed()
     logger.info("Random seeds set.")
     data_preparer = DataPrep(logger)
-    data_preparer.read_file(FILE_ADDRESS)
+    data_preparer.read_file(args.data_path)
     data_preparer.initial_prep()
 
     start = time.time()

@@ -7,6 +7,8 @@ from sklearn.metrics import mean_squared_error
 import numpy as np
 from metrics import *
 from data_prep import DataPrep
+import matplotlib.pyplot as plt
+import pandas as pd
 
 def create_LSTM():
     """
@@ -55,27 +57,26 @@ def perform_LSTM(x_train, y_train, x_test, y_test, scaler_x, scaler_y, parameter
 
     profit = profitability_test(prediction, y_test)
     mape = mean_absolute_percentage_error(prediction, y_test)
-    #print('\t\tProfitability: {:0.2f} %'.format(profit))
-    #print('\t\tMAPE: {:0.2f} %'.format(mape))
+    print('\t\tProfitability: {:0.2f} %'.format(profit))
+    print('\t\tMAPE: {:0.2f} %'.format(mape))
 
-    # # Plot
-    # plt.plot(prediction, label="predictions")
-    # # y_test = scaler_y.inverse_transform (np. array (y_test). reshape ((len( y_test), 1)))
-    # plt.plot( [row[0] for row in y_test], label="actual")
-    # plt.show()
-    return profit, mape
+    return profit, mape, prediction, [row[0] for row in y_test]
 
-def run_algorithm(data_preparer, year, SPLIT_PERIOD, TEST_TRAIN_SPLIT_COEFFICENT, PARAMETERS, apply_wavelet=False):
+def run_algorithm(data_preparer, year, SPLIT_PERIOD, TEST_TRAIN_SPLIT_COEFFICENT, PARAMETERS, args):
     '''
     Perform LSTM predicting with a sliding window approach
     '''
     print(len(data_preparer.data))
     df = data_preparer.choose_year(year)
+
+    print("LENGTH OF COLUMNS", len(df.columns))
     periods = len(df)
     print(periods)
     profits = []
     mapes = []
     sliding_interval = SPLIT_PERIOD - int(SPLIT_PERIOD*TEST_TRAIN_SPLIT_COEFFICENT)
+    predictions_total = np.zeros(shape=(0,1))
+    actual_total = np.zeros(shape=(0,1))
     # model = create_LSTM();
     for i in range(0, periods, sliding_interval):
         profit = 0.0
@@ -86,26 +87,46 @@ def run_algorithm(data_preparer, year, SPLIT_PERIOD, TEST_TRAIN_SPLIT_COEFFICENT
         else:
             end_period = i + SPLIT_PERIOD
 
-    #     MAIN ACTION
+    #     MAIN ACTIONa
+
 
         print('Current period: ', start_period, ' to ', end_period)
         current_df = df[start_period:end_period]
+
     #     Deviding
-        if apply_wavelet:
+        if args.wavelet:
             x_train, y_train, x_test, y_test = DataPrep.train_test_splitting_wavelet(current_df, PARAMETERS)
         else:
             x_train, y_train, x_test, y_test = DataPrep.train_test_splitting(current_df, PARAMETERS)
 
-        print("Shape of x_train: ", x_train.shape)
-
         x_train, y_train, x_test, y_test, scaler_x, scaler_y = DataPrep.scale_all_separetly(x_train, y_train, x_test, y_test, PARAMETERS)
     #     Scaling
     #     Performing LSTM
-        profit, mape = perform_LSTM(x_train, y_train, x_test, y_test, scaler_x, scaler_y, PARAMETERS)
+        profit, mape, predictions, actual = perform_LSTM(x_train, y_train, x_test, y_test, scaler_x, scaler_y, PARAMETERS)
+        print(predictions.shape)
+        print(predictions.dtype)
 
+        predictions_total = np.append(predictions_total,predictions)
+        actual_total = np.append(actual_total,actual)
+
+        print(len(actual_total))
+        print(len(predictions_total))
         profits.append(profit)
         mapes.append(mape)
     #     END ACTION
+
     print("Overall yearly profitability for ", year, " year: ")
     print(sum(profits))
+    plt.figure()
+    plt.plot(predictions_total, label="predictions")
+    # y_test = scaler_y.inverse_transform (np. array (y_test). reshape ((len( y_test), 1)))
+    plt.xlabel("Tick")
+    plt.ylabel("Price")
+    plt.plot( actual_total, label="actual")
+    plt.title("Performance of year "+ str(year))
+    plt.legend()
+    save_plot_address = "Plots/"+args.data_path[8:12]+"_"+"forest_"+str(args.forest)+"_wavelet_"+str(args.wavelet)\
+    +"_randomSeed_"+str(args.random_seed)+"_forest_no_"+str(args.forest_no)+"_YEAR_"+str(year)+".png"
+    plt.savefig(save_plot_address)
+    # plt.show()
     return (sum(profits))

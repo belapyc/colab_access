@@ -160,13 +160,10 @@ class DataPrep:
         data_train = df[0:train_end]
         data_test = df[train_end:]
 
-
         data_train = DataPrep.apply_wavelet(data_train, 1)
 
         x_train = (data_train.loc[:, : '<RSI>']).values
         y_train = (data_train.loc[:, '<NEXT>':]).values
-
-
 
         x_test =  (data_test.loc[:, : '<RSI>']).values
         y_test =  (data_test.loc[:, '<NEXT>':]).values

@@ -125,6 +125,14 @@ def run_algorithm(data_preparer, year, SPLIT_PERIOD, TEST_TRAIN_SPLIT_COEFFICENT
     plt.plot( actual_total, label="actual")
     plt.title("Performance of year "+ str(year))
     plt.legend()
+    preds = pd.DataFrame(predictions_total)
+    act = pd.DataFrame(actual_total)
+    save_csv_address_predictions = "predictions/"+args.data_path[8:12]+"_"+"forest_"+str(args.forest)+"_wavelet_"+str(args.wavelet)\
+    +"_randomSeed_"+str(args.random_seed)+"_forest_no_"+str(args.forest_no)+"_YEAR_"+str(year)+"predictions"
+    save_csv_address_actual = "predictions/"+args.data_path[8:12]+"_"+"forest_"+str(args.forest)+"_wavelet_"+str(args.wavelet)\
+    +"_randomSeed_"+str(args.random_seed)+"_forest_no_"+str(args.forest_no)+"_YEAR_"+str(year)+"actual"
+    preds.to_csv(save_csv_address_predictions)
+    preds.to_csv(save_csv_address_actual)
     save_plot_address = "Plots/"+args.data_path[8:12]+"_"+"forest_"+str(args.forest)+"_wavelet_"+str(args.wavelet)\
     +"_randomSeed_"+str(args.random_seed)+"_forest_no_"+str(args.forest_no)+"_YEAR_"+str(year)+".png"
     plt.savefig(save_plot_address)

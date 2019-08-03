@@ -127,8 +127,13 @@ def run_algorithm(data_preparer, year, SPLIT_PERIOD, TEST_TRAIN_SPLIT_COEFFICENT
     plt.legend()
     preds = pd.DataFrame(predictions_total)
     act = pd.DataFrame(actual_total)
-    save_csv_address_predictions = "predictions/"+args.data_path[8:12]+"_"+"forest_"+str(args.forest)+"_wavelet_"+str(args.wavelet)\
-    +"_randomSeed_"+str(args.random_seed)+"_forest_no_"+str(args.forest_no)+"_YEAR_"+str(year)+"predictions"
+    if args.forest:
+        save_csv_address_predictions = "predictions/forest/"+args.data_path[8:12]+"_"+"forest_"+str(args.forest)+"_wavelet_"+str(args.wavelet)\
+        +"_randomSeed_"+str(args.random_seed)+"_forest_no_"+str(args.forest_no)+"_YEAR_"+str(year)+"predictions"
+    else:
+        save_csv_address_predictions = "predictions/SAE/"+args.data_path[8:12]+"_"+"forest_"+str(args.forest)+"_wavelet_"+str(args.wavelet)\
+        +"_randomSeed_"+str(args.random_seed)+"_forest_no_"+str(args.forest_no)+"_YEAR_"+str(year)+"predictions"
+
     save_csv_address_actual = "predictions/"+args.data_path[8:12]+"_"+"forest_"+str(args.forest)+"_wavelet_"+str(args.wavelet)\
     +"_randomSeed_"+str(args.random_seed)+"_forest_no_"+str(args.forest_no)+"_YEAR_"+str(year)+"actual"
     preds.to_csv(save_csv_address_predictions)

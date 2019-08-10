@@ -117,6 +117,7 @@ def run_algorithm(data_preparer, year, SPLIT_PERIOD, TEST_TRAIN_SPLIT_COEFFICENT
 
     print("Overall yearly profitability for ", year, " year: ")
     print(sum(profits))
+    print(args.data_path[8:12]+"  forests"+str(args.forest)+"  random"+ str(args.random_seed))
     plt.figure()
     plt.plot(predictions_total, label="predictions")
     # y_test = scaler_y.inverse_transform (np. array (y_test). reshape ((len( y_test), 1)))

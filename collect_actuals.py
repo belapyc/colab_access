@@ -44,23 +44,23 @@ def perform_LSTM(x_train, y_train, x_test, y_test, scaler_x, scaler_y, parameter
     """
     x_train = x_train.reshape (x_train. shape + (1,))
     x_test = x_test.reshape (x_test. shape + (1,))
-
-    model = Sequential ()
-    model.add (LSTM (parameters['HIDDEN_LSTM_UNITS'], activation = 'tanh', recurrent_activation="hard_sigmoid", input_shape =(parameters['INPUT_SHAPE'], 1) ))
-    model.add (Dense (units=1, activation = 'linear'))
-    model.compile (loss ="mean_squared_error" , optimizer = "adam")
-    model.fit (x_train, y_train, batch_size = parameters['BATCH_SIZE'], epochs = parameters['EPOCHS'], shuffle = False, verbose = parameters['SHOW_PROGRESS'])
-
-    prediction = model.predict (x_test)
-    prediction = scaler_y.inverse_transform (np. array (prediction). reshape ((len( prediction), 1)))
+    #
+    # model = Sequential ()
+    # model.add (LSTM (parameters['HIDDEN_LSTM_UNITS'], activation = 'tanh', recurrent_activation="hard_sigmoid", input_shape =(parameters['INPUT_SHAPE'], 1) ))
+    # model.add (Dense (units=1, activation = 'linear'))
+    # model.compile (loss ="mean_squared_error" , optimizer = "adam")
+    # model.fit (x_train, y_train, batch_size = parameters['BATCH_SIZE'], epochs = parameters['EPOCHS'], shuffle = False, verbose = parameters['SHOW_PROGRESS'])
+    #
+    # prediction = model.predict (x_test)
+    # prediction = scaler_y.inverse_transform (np. array (prediction). reshape ((len( prediction), 1)))
     y_test = scaler_y.inverse_transform (np. array (y_test). reshape ((len( y_test), 1)))
 
-    profit = profitability_test(prediction, y_test)
-    mape = mean_absolute_percentage_error(prediction, y_test)
-    print('\t\tProfitability: {:0.2f} %'.format(profit))
-    print('\t\tMAPE: {:0.2f} %'.format(mape))
+    # profit = profitability_test(prediction, y_test)
+    # mape = mean_absolute_percentage_error(prediction, y_test)
+    # print('\t\tProfitability: {:0.2f} %'.format(profit))
+    # print('\t\tMAPE: {:0.2f} %'.format(mape))
 
-    return profit, mape, prediction, [row[0] for row in y_test]
+    return [row[0] for row in y_test]
 
 def run_algorithm(data_preparer, year, SPLIT_PERIOD, TEST_TRAIN_SPLIT_COEFFICENT, PARAMETERS, args):
     '''
@@ -102,44 +102,42 @@ def run_algorithm(data_preparer, year, SPLIT_PERIOD, TEST_TRAIN_SPLIT_COEFFICENT
         x_train, y_train, x_test, y_test, scaler_x, scaler_y = DataPrep.scale_all_separetly(x_train, y_train, x_test, y_test, PARAMETERS)
     #     Scaling
     #     Performing LSTM
-        profit, mape, predictions, actual = perform_LSTM(x_train, y_train, x_test, y_test, scaler_x, scaler_y, PARAMETERS)
-        print(predictions.shape)
-        print(predictions.dtype)
+        actual = perform_LSTM(x_train, y_train, x_test, y_test, scaler_x, scaler_y, PARAMETERS)
 
-        predictions_total = np.append(predictions_total,predictions)
+
+        # predictions_total = np.append(predictions_total,predictions)
         actual_total = np.append(actual_total,actual)
 
-        print(len(actual_total))
-        print(len(predictions_total))
-        profits.append(profit)
-        mapes.append(mape)
+        # print(len(actual_total))
+        # print(len(predictions_total))
+        # profits.append(profit)
+        # mapes.append(mape)
     #     END ACTION
 
-    print("Overall yearly profitability for ", year, " year: ")
-    print(sum(profits))
-    plt.figure()
-    plt.plot(predictions_total, label="predictions")
-    # y_test = scaler_y.inverse_transform (np. array (y_test). reshape ((len( y_test), 1)))
-    plt.xlabel("Tick")
-    plt.ylabel("Price")
-    plt.plot( actual_total, label="actual")
-    plt.title("Performance of year "+ str(year))
-    plt.legend()
-    preds = pd.DataFrame(predictions_total)
+    # print("Overall yearly profitability for ", year, " year: ")
+    # print(sum(profits))
+    # plt.figure()
+    # plt.plot(predictions_total, label="predictions")
+    # # y_test = scaler_y.inverse_transform (np. array (y_test). reshape ((len( y_test), 1)))
+    # plt.xlabel("Tick")
+    # plt.ylabel("Price")
+    # plt.plot( actual_total, label="actual")
+    # plt.title("Performance of year "+ str(year))
+    # plt.legend()
+    # preds = pd.DataFrame(predictions_total)
     act = pd.DataFrame(actual_total)
-    if args.forest:
-        save_csv_address_predictions = "predictions/forest/"+args.data_path[8:12]+"_"+"forest_"+str(args.forest)+"_wavelet_"+str(args.wavelet)\
-        +"_randomSeed_"+str(args.random_seed)+"_forest_no_"+str(args.forest_no)+"_YEAR_"+str(year)+"predictions"
-    else:
-        save_csv_address_predictions = "predictions/SAE/"+args.data_path[8:12]+"_"+"forest_"+str(args.forest)+"_wavelet_"+str(args.wavelet)\
-        +"_randomSeed_"+str(args.random_seed)+"_forest_no_"+str(args.forest_no)+"_YEAR_"+str(year)+"predictions"
+    # if args.forest:
+    #     save_csv_address_predictions = "predictions/forest/"+args.data_path[8:12]+"_"+"forest_"+str(args.forest)+"_wavelet_"+str(args.wavelet)\
+    #     +"_randomSeed_"+str(args.random_seed)+"_forest_no_"+str(args.forest_no)+"_YEAR_"+str(year)+"predictions"
+    # else:
+    #     save_csv_address_predictions = "predictions/SAE/"+args.data_path[8:12]+"_"+"forest_"+str(args.forest)+"_wavelet_"+str(args.wavelet)\
+    #     +"_randomSeed_"+str(args.random_seed)+"_forest_no_"+str(args.forest_no)+"_YEAR_"+str(year)+"predictions"
 
-    save_csv_address_actual = "predictions/"+args.data_path[8:12]+"_"+"forest_"+str(args.forest)+"_wavelet_"+str(args.wavelet)\
-    +"_randomSeed_"+str(args.random_seed)+"_forest_no_"+str(args.forest_no)+"_YEAR_"+str(year)+"actual"
-    preds.to_csv(save_csv_address_predictions)
+    save_csv_address_actual = "actual_values/"+args.data_path[8:12]+"_YEAR_"+str(year)+"actual.csv"
+    # preds.to_csv(save_csv_address_predictions)
     act.to_csv(save_csv_address_actual)
-    save_plot_address = "Plots/"+args.data_path[8:12]+"_"+"forest_"+str(args.forest)+"_wavelet_"+str(args.wavelet)\
-    +"_randomSeed_"+str(args.random_seed)+"_forest_no_"+str(args.forest_no)+"_YEAR_"+str(year)+".png"
-    plt.savefig(save_plot_address)
-    # plt.show()
-    return (sum(profits))
+    # save_plot_address = "Plots/"+args.data_path[8:12]+"_"+"forest_"+str(args.forest)+"_wavelet_"+str(args.wavelet)\
+    # +"_randomSeed_"+str(args.random_seed)+"_forest_no_"+str(args.forest_no)+"_YEAR_"+str(year)+".png"
+    # plt.savefig(save_plot_address)
+    # # plt.show()
+    # return (sum(profits))

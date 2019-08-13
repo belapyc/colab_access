@@ -46,5 +46,15 @@
 # python launcher.py --wavelet  --random_seed=1
 
 #python launcher.py --wavelet --forest --forest_no=5 --random_seed=1
-python launcher.py --wavelet --forest --forest_no=5 --random_seed=0
-python launcher.py --wavelet --forest --forest_no=5 --random_seed=5
+#python launcher.py --wavelet --forest --forest_no=5 --random_seed=0
+#python launcher.py --wavelet --forest --forest_no=5 --random_seed=5
+python launcher.py --wavelet --forest --forest_no=10 --random_seed=5 --data_path="Data/TA/eurex_fut_15mins_2009_2018_TA.csv"
+python launcher.py --wavelet --forest --forest_no=20 --random_seed=5 --data_path="Data/TA/eurex_fut_15mins_2009_2018_TA.csv"
+python launcher.py --wavelet --forest --forest_no=10 --random_seed=0 --data_path="Data/TA/eurex_fut_15mins_2009_2018_TA.csv"
+python launcher.py --wavelet --forest --forest_no=20 --random_seed=0 --data_path="Data/TA/eurex_fut_15mins_2009_2018_TA.csv"
+
+python launcher.py --wavelet --random_seed=1 --data_path="Data/TA/eurex_fut_15mins_2009_2018_TA.csv"
+python launcher.py --wavelet --forest --forest_no=5 --random_seed=1 --data_path="Data/TA/eurex_fut_15mins_2009_2018_TA.csv"
+python launcher.py --wavelet --forest --forest_no=10 --random_seed=1 --data_path="Data/TA/eurex_fut_15mins_2009_2018_TA.csv"
+python launcher.py --wavelet --forest --forest_no=20 --random_seed=1 --data_path="Data/TA/eurex_fut_15mins_2009_2018_TA.csv"
+

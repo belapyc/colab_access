@@ -65,12 +65,12 @@ def set_logger(level, logger):
     should_roll_over = os.path.isfile(logPath+"/"+fileName)
     # TODO: logs dont output to file
     # Creating file handler for logger
-    fh = logging.handlers.RotatingFileHandler(logPath+"/"+fileName, mode='w', backupCount=5)
-    if should_roll_over:  # log already exists, roll over!
-        fh.doRollover()
-    fh.setFormatter(formatter)
-    fh.setLevel(logging.DEBUG)
+    # fh = logging.handlers.RotatingFileHandler(logPath+"/"+fileName, backupCount=5)
+    # if should_roll_over:  # log already exists, roll over!
+    #     fh.doRollover()
+    # fh.setFormatter(formatter)
+    # fh.setLevel(logging.DEBUG)
 
-    logger.addHandler(fh)
+    #logger.addHandler(fh)
     logger.addHandler(ch)
     logger.info("Logger is set.")
